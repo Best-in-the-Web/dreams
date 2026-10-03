@@ -1,0 +1,27 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=file:./data/prod.db
+      - SESSION_SECRET=changeme-in-production
+    volumes:
+      - escapemap-data:/app/data
+
+  # Optional PostgreSQL for production-style setup (switch Prisma provider to postgresql)
+  postgres:
+    image: postgres:16-alpine
+    profiles: ["postgres"]
+    environment:
+      POSTGRES_USER: escapemap
+      POSTGRES_PASSWORD: escapemap
+      POSTGRES_DB: escapemap
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  escapemap-data:
+  pgdata:

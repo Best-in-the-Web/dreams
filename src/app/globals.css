@@ -1,0 +1,135 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+:root {
+  --forest: #2f4a3c;
+  --moss: #4a6b58;
+  --sand: #f3eee6;
+  --clay: #c4784a;
+  --ink: #1c1a17;
+  --mist: #e8e2d8;
+  --cream: #faf7f2;
+  --background: var(--cream);
+  --foreground: var(--ink);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-forest: var(--forest);
+  --color-moss: var(--moss);
+  --color-sand: var(--sand);
+  --color-clay: var(--clay);
+  --color-ink: var(--ink);
+  --color-mist: var(--mist);
+  --color-cream: var(--cream);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), Georgia, serif;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display), Georgia, serif;
+  letter-spacing: -0.02em;
+}
+
+/* Leaflet tweaks */
+.leaflet-container {
+  font-family: var(--font-body), system-ui, sans-serif;
+  background: #d5ddd4;
+  z-index: 0;
+}
+
+.price-marker {
+  background: transparent;
+  border: none;
+}
+
+.price-marker-inner {
+  background: #faf7f2;
+  color: #1c1a17;
+  border: 1.5px solid #2f4a3c;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(28, 26, 23, 0.18);
+  white-space: nowrap;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.price-marker-inner:hover,
+.price-marker-inner.active {
+  background: #2f4a3c;
+  color: #faf7f2;
+  transform: scale(1.06);
+}
+
+.cluster-marker {
+  background: #2f4a3c;
+  color: #faf7f2;
+  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  border: 2px solid #faf7f2;
+  box-shadow: 0 4px 14px rgba(28, 26, 23, 0.25);
+}
+
+.origin-pulse {
+  width: 18px;
+  height: 18px;
+  background: #c4784a;
+  border: 3px solid #faf7f2;
+  border-radius: 50%;
+  box-shadow: 0 0 0 8px rgba(196, 120, 74, 0.25);
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-rise {
+  animation: rise-in 0.55s ease both;
+}
+
+@keyframes soft-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade {
+  animation: soft-fade 0.7s ease both;
+}

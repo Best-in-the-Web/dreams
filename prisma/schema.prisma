@@ -1,0 +1,374 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// SQLite for zero-config local MVP. Switch to postgresql for production.
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+  PARTNER
+}
+
+enum PartnerStatus {
+  LEAD
+  CONTACTED
+  NEGOTIATING
+  ONBOARDING
+  ACTIVE
+  PAUSED
+  CLOSED
+}
+
+enum ContractStatus {
+  NONE
+  DRAFT
+  SENT
+  SIGNED
+  EXPIRED
+}
+
+enum CommissionModel {
+  PERCENTAGE
+  NET_PRICE
+}
+
+enum PropertyType {
+  CABIN
+  TINY_HOUSE
+  GLAMPING
+  COTTAGE
+  HOTEL
+  APARTMENT
+  FARM_STAY
+  CASTLE
+  TREE_HOUSE
+  OTHER
+}
+
+enum TripType {
+  ROMANTIC
+  FAMILY
+  DOG_FRIENDLY
+  WELLNESS
+  ADVENTURE
+  FOOD_WINE
+  RELAX
+  WORK_RETREAT
+}
+
+enum Environment {
+  FOREST
+  MOUNTAINS
+  LAKE
+  RIVER
+  WINE_REGION
+  COUNTRYSIDE
+  CITY
+}
+
+enum BookingStatus {
+  PENDING
+  PAID
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum PartnerPaymentStatus {
+  NOT_DUE
+  PENDING
+  PAID
+}
+
+enum NearbyCategory {
+  NATURE
+  HIKING
+  RESTAURANT
+  CAFE
+  ATTRACTION
+  SWIMMING
+  CYCLING
+  CHILDREN
+  DOG_FRIENDLY
+  SHOP
+}
+
+enum TaskStatus {
+  OPEN
+  DONE
+  CANCELLED
+}
+
+model User {
+  id           String      @id @default(cuid())
+  email        String      @unique
+  passwordHash String
+  name         String
+  phone        String?
+  role         Role        @default(CUSTOMER)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  bookings     Booking[]
+  favourites   Favourite[]
+  reviews      Review[]
+  notes        InternalNote[] @relation("NoteAuthor")
+  tasks        Task[]         @relation("TaskAssignee")
+  managedPartners Partner[]   @relation("AccountManager")
+}
+
+model Partner {
+  id                   String           @id @default(cuid())
+  businessName         String
+  propertyName         String?
+  contactPerson        String
+  phone                String
+  email                String
+  address              String
+  lat                  Float?
+  lng                  Float?
+  status               PartnerStatus    @default(LEAD)
+  contractStatus       ContractStatus   @default(NONE)
+  commissionModel      CommissionModel  @default(PERCENTAGE)
+  commissionPercent    Float            @default(15)
+  paymentDetails       String?
+  internalTags         String           @default("[]") // JSON array
+  accountManagerId     String?
+  accountManager       User?            @relation("AccountManager", fields: [accountManagerId], references: [id])
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  properties           Property[]
+  notes                InternalNote[]
+  tasks                Task[]
+}
+
+model Property {
+  id              String       @id @default(cuid())
+  partnerId       String
+  partner         Partner      @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+  slug            String       @unique
+  name            String
+  tagline         String?
+  description     String
+  whySpecial      String
+  type            PropertyType
+  address         String
+  city            String
+  country         String
+  lat             Float
+  lng             Float
+  checkIn         String       @default("15:00")
+  checkOut        String       @default("11:00")
+  guestCapacity   Int
+  beds            Int
+  childrenPolicy  String
+  petPolicy       String
+  parking         String?
+  foodOptions     String?
+  cancellation    String
+  basePriceCzk    Int
+  weekendPriceCzk Int?
+  rating          Float        @default(4.8)
+  reviewCount     Int          @default(0)
+  published       Boolean      @default(true)
+  images          String       // JSON array of URLs
+  amenities       String       @default("[]") // JSON Amenity keys
+  tripTypes       String       @default("[]") // JSON TripType[]
+  environments    String       @default("[]") // JSON Environment[]
+  tags            String       @default("[]") // JSON display tags
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  units           Unit[]
+  packages        Package[]
+  nearbyPlaces    NearbyPlace[]
+  favourites      Favourite[]
+  bookings        Booking[]
+  reviews         Review[]
+  notes           InternalNote[]
+}
+
+model Unit {
+  id           String         @id @default(cuid())
+  propertyId   String
+  property     Property       @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  name         String
+  capacity     Int
+  beds         Int
+  basePriceCzk Int
+  minStay      Int            @default(1)
+  description  String?
+  availability Availability[]
+  prices       Price[]
+  bookings     Booking[]
+}
+
+model Package {
+  id            String    @id @default(cuid())
+  propertyId    String
+  property      Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  name          String
+  slug          String
+  description   String
+  nights        Int       @default(2)
+  priceCzk      Int
+  includes      String    // JSON string array
+  maxGuests     Int?
+  tripType      TripType?
+  active        Boolean   @default(true)
+  bookings      Booking[]
+}
+
+model Availability {
+  id        String   @id @default(cuid())
+  unitId    String
+  unit      Unit     @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  date      DateTime
+  available Boolean  @default(true)
+  blocked   Boolean  @default(false)
+
+  @@unique([unitId, date])
+  @@index([date])
+}
+
+model Price {
+  id       String   @id @default(cuid())
+  unitId   String
+  unit     Unit     @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  date     DateTime
+  priceCzk Int
+
+  @@unique([unitId, date])
+}
+
+model NearbyPlace {
+  id          String         @id @default(cuid())
+  propertyId  String
+  property    Property       @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  name        String
+  category    NearbyCategory
+  description String?
+  lat         Float
+  lng         Float
+  distanceKm  Float?
+}
+
+model Booking {
+  id                   String               @id @default(cuid())
+  bookingNumber        String               @unique
+  userId               String?
+  user                 User?                @relation(fields: [userId], references: [id])
+  propertyId           String
+  property             Property             @relation(fields: [propertyId], references: [id])
+  unitId               String?
+  unit                 Unit?                @relation(fields: [unitId], references: [id])
+  packageId            String?
+  package              Package?             @relation(fields: [packageId], references: [id])
+  checkIn              DateTime
+  checkOut             DateTime
+  adults               Int
+  children             Int                  @default(0)
+  childrenAges         String               @default("[]")
+  pets                 Int                  @default(0)
+  guestName            String
+  guestEmail           String
+  guestPhone           String?
+  customerPriceCzk     Int
+  partnerNetPriceCzk   Int
+  commissionCzk        Int
+  paymentFeeCzk        Int                  @default(0)
+  refundAmountCzk      Int                  @default(0)
+  amountOwedPartnerCzk Int
+  platformRevenueCzk   Int
+  extrasCzk            Int                  @default(0)
+  taxesCzk             Int                  @default(0)
+  status               BookingStatus        @default(PENDING)
+  paymentStatus        PaymentStatus        @default(PENDING)
+  partnerPaymentStatus PartnerPaymentStatus @default(NOT_DUE)
+  cancellationNote     String?
+  internalNotes        String?
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  payment              Payment?
+  review               Review?
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  bookingId   String        @unique
+  booking     Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  provider    String        @default("mock") // mock | stripe | comgate
+  providerRef String?
+  amountCzk   Int
+  status      PaymentStatus @default(PENDING)
+  paidAt      DateTime?
+  createdAt   DateTime      @default(now())
+}
+
+model Review {
+  id              String   @id @default(cuid())
+  bookingId       String   @unique
+  booking         Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  propertyId      String
+  property        Property @relation(fields: [propertyId], references: [id])
+  overall         Int
+  cleanliness     Int
+  location        Int
+  value           Int
+  experience      Int
+  romanticScore   Int?
+  familyScore     Int?
+  dogFriendlyScore Int?
+  text            String?
+  createdAt       DateTime @default(now())
+}
+
+model Favourite {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, propertyId])
+}
+
+model InternalNote {
+  id         String    @id @default(cuid())
+  partnerId  String?
+  partner    Partner?  @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+  propertyId String?
+  property   Property? @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  authorId   String
+  author     User      @relation("NoteAuthor", fields: [authorId], references: [id])
+  body       String
+  createdAt  DateTime  @default(now())
+}
+
+model Task {
+  id           String     @id @default(cuid())
+  partnerId    String?
+  partner      Partner?   @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+  assigneeId   String?
+  assignee     User?      @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  title        String
+  description  String?
+  dueDate      DateTime?
+  status       TaskStatus @default(OPEN)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
