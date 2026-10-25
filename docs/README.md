@@ -1,14 +1,21 @@
 # Documentation
 
-| Doc | Purpose |
-|-----|---------|
-| [PRODUCT_SPEC.md](./PRODUCT_SPEC.md) | Full product prompt — paste into any AI to rebuild EscapeMap-class MVP |
-| [../README.md](../README.md) | Setup, demo accounts, scripts |
+New contributors should start with the [root README](../README.md), then read the product overview and setup guide.
 
-## Using the product spec with another model
+| Document | What it explains |
+| --- | --- |
+| [Product](PRODUCT.md) | Map-first travel marketplace, example journey, current scope and limitations |
+| [Setup](SETUP.md) | Local install, environment variables, database lifecycle, troubleshooting and hosting |
+| [Architecture](ARCHITECTURE.md) | Frontend/backend boundaries, search flow, route map, mock integrations |
+| [Data model](DATA_MODEL.md) | Prisma entities, relationships, constraints, booking states and economics |
+| [Contributing](../CONTRIBUTING.md) | Development workflow, checks, smoke verification and pull requests |
+| [MVP roadmap](ROADMAP.md) | Milestones in implementation order with acceptance criteria |
+| [Product specification](PRODUCT_SPEC.md) | Original English design brief and standalone prompt for another AI model |
 
-1. Create/open an empty repository (or a clean workspace).
-2. Open `PRODUCT_SPEC.md` and copy from the horizontal rule downward (or the whole file).
-3. Paste into Claude / GPT / Cursor / etc. as the primary build instruction.
-4. Optionally add: “Follow the Implementation notes and Acceptance smoke checklist at the end.”
-5. After generation, run the project’s test command and walk the smoke checklist.
+The product specification describes the intended product, including features still to build. The product overview and architecture describe the checked-in implementation. The Prisma schema and application source remain the authority for runtime behavior.
+
+## Reusing the product specification
+
+Copy the prompt below the horizontal rule in `PRODUCT_SPEC.md` into a new coding session. Also supply the current architecture and roadmap if extending this repository. Review generated code, run the project's checks, and verify the user journeys; do not assume that every requested feature was implemented.
+
+All maintained documentation should be written in English. External references may be in Czech or another local language; explain their purpose in English. Preserve geographic names and source URLs rather than translating identifiers.

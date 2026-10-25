@@ -6,7 +6,7 @@ export const brand = {
   tagline: "Where do you want to escape this weekend?",
   shortTagline: "Discover unusual stays within driving distance",
   currency: "Kč",
-  locale: "cs-CZ",
+  locale: "en-GB",
   defaultOrigin: {
     city: "Brno",
     lat: 49.1951,

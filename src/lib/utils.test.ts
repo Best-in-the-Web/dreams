@@ -11,9 +11,8 @@ import {
 } from "@/lib/utils";
 
 describe("formatPrice", () => {
-  it("formats CZK with currency", () => {
-    expect(formatPrice(5490)).toContain("Kč");
-    expect(formatPrice(5490)).toMatch(/5[\s\u00a0]?490/);
+  it("formats CZK for the English interface", () => {
+    expect(formatPrice(5490)).toBe("5,490 Kč");
   });
 });
 
