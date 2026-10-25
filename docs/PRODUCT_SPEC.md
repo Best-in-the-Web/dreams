@@ -1,6 +1,8 @@
 # EscapeMap — Product specification (AI rebuild prompt)
 
-Use this document as a **standalone prompt** with any AI coding model to recreate a product that is functionally and experientially the same as EscapeMap.
+Use this document as a **standalone design and build prompt** with another AI coding model. It captures the intended EscapeMap experience, including features that are not implemented yet.
+
+For the current repository, read [Product and MVP scope](PRODUCT.md), [Architecture](ARCHITECTURE.md), and the [MVP roadmap](ROADMAP.md). The checked-in app uses SQLite locally, approximate travel times, and mock payments. It does not yet enforce date availability, provide full inventory editors, or filter the map to saved places.
 
 Copy everything below the line into a new chat / agent session (optionally attach or open an empty repo first).
 
@@ -962,11 +964,11 @@ If some integrations require external credentials, mock them cleanly rather than
 
 Build the MVP so it can later evolve into a real multi-country travel marketplace.
 
-## Implementation notes for the AI (keep parity with this repo)
+## Implementation direction for the AI
 
-When rebuilding, also include:
+When rebuilding, also include the following. These are design targets, not a claim that every item is complete in this repository:
 
-1. **Central brand config** (e.g. `src/lib/brand.ts`) so renaming EscapeMap is one-file change.
+1. **Central brand config** (e.g. `src/lib/brand.ts`) for the display name, copy, colours and origin; audit other identifiers for a full rename.
 2. **Keyword NL search** structured so an LLM can replace the parser later (`parseNaturalQuery` / `smartSearch`).
 3. **Mock payment + channel-manager interfaces** with a clear swap path to Stripe/Comgate/PMS.
 4. **Map provider config** abstracted from Leaflet/OSM tiles.
@@ -976,7 +978,9 @@ When rebuilding, also include:
 8. **Docker-ready** deploy story; SQLite is acceptable for local MVP if PostgreSQL is documented as the production target.
 9. Visual direction: warm/premium European (forest + sand + clay), not purple SaaS / Booking.com corporate.
 
-### Acceptance smoke checklist
+### Target acceptance smoke checklist
+
+Use this checklist to assess a new implementation alongside the detailed gaps in [Product and MVP scope](PRODUCT.md).
 
 - [ ] Homepage → select vibes → Brno → 200 km → This weekend → map
 - [ ] Map shows price markers + radius; marker opens preview without leaving map

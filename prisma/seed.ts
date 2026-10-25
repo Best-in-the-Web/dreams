@@ -94,7 +94,7 @@ const properties: SeedProperty[] = [
       { name: "Radhošť ridge trail", category: "HIKING", lat: 49.491, lng: 18.223, distanceKm: 8, description: "Iconic Beskydy hike" },
       { name: "Pustevny viewpoint", category: "NATURE", lat: 49.489, lng: 18.265, distanceKm: 12 },
       { name: "Koliba U Záryša", category: "RESTAURANT", lat: 49.55, lng: 18.22, distanceKm: 3 },
-      { name: "Rožnov skanzen", category: "ATTRACTION", lat: 49.458, lng: 18.143, distanceKm: 15 },
+      { name: "Rožnov Open-Air Museum", category: "ATTRACTION", lat: 49.458, lng: 18.143, distanceKm: 15 },
       { name: "Forest café", category: "CAFE", lat: 49.545, lng: 18.205, distanceKm: 2 },
     ],
   },
@@ -134,9 +134,9 @@ const properties: SeedProperty[] = [
     ],
     nearby: [
       { name: "Mikulov Castle", category: "ATTRACTION", lat: 48.8069, lng: 16.6375, distanceKm: 1 },
-      { name: "Svatý kopeček", category: "HIKING", lat: 48.812, lng: 16.65, distanceKm: 2 },
+      { name: "Holy Hill (Svatý kopeček)", category: "HIKING", lat: 48.812, lng: 16.65, distanceKm: 2 },
       { name: "Nové Mlýny lakes", category: "SWIMMING", lat: 48.85, lng: 16.72, distanceKm: 12 },
-      { name: "Vinařství Pavlov", category: "RESTAURANT", lat: 48.874, lng: 16.672, distanceKm: 10 },
+      { name: "Pavlov Winery", category: "RESTAURANT", lat: 48.874, lng: 16.672, distanceKm: 10 },
     ],
   },
   {
@@ -215,7 +215,7 @@ const properties: SeedProperty[] = [
       },
     ],
     nearby: [
-      { name: "Jánošíkove diery", category: "HIKING", lat: 49.25, lng: 19.05, distanceKm: 4 },
+      { name: "Jánošíkove Diery Gorge", category: "HIKING", lat: 49.25, lng: 19.05, distanceKm: 4 },
       { name: "Vrátna valley", category: "NATURE", lat: 49.23, lng: 19.03, distanceKm: 6 },
       { name: "Koliba Terchová", category: "RESTAURANT", lat: 49.256, lng: 19.03, distanceKm: 1 },
     ],

@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatPrice(czk: number): string {
-  return `${czk.toLocaleString("cs-CZ")} ${brand.currency}`;
+  return `${czk.toLocaleString(brand.locale)} ${brand.currency}`;
 }
 
 export function parseJsonArray<T = string>(value: string | null | undefined): T[] {
